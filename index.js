@@ -1,7 +1,10 @@
 // God is all, all is God
 
 let time = 1
+
 const localities = {}
+const spaceLocalities = {}
+
 const language = ['❤️', '👉', '👆', '👇', '💪', "✌️", '👌', "🙏", '🙂', '😍', '🥰', '😘', '😛']
 
 const thoughMatrixes = [
@@ -14,11 +17,11 @@ const thoughMatrixes = [
 const selfLove = '❤️'
 const twoLove = ['❤️', '❤️']
 
-function love(self, self1) {
-  self.life.push(selfLove)
+function love(l, l1) {
+  l.life.push(selfLove)
 
-  if (self !== self1) {
-    self1.life.push(selfLove)
+  if (l !== l1) {
+    l1.life.push(selfLove)
   }
 
   return 1
@@ -48,60 +51,76 @@ function averagePos(pos, pos1) {
 }
 
 // Life is a gift
-function createLocality({ mass, observation }) {
-  const id = Math.random()
+function createLocality({ id, mass, observation }) {
+  const xid = id || Math.random().toString()
 
-  return localities[id] = {
-    id,
-    self: [{ life: ['1'], with: id, mass, observation }],
-    time: [{ life: ['1'], with: id, pos: { x: Math.random(), y: 0, dx: 0, dy: 0, ddx: 0, ddy: 0 } }],
+  spaceLocalities[xid] = {
+    id: xid,
+    life: ['1'],
+    pos: { x: Math.random(), y: 0, dx: 0, dy: 0, ddx: 0, ddy: 0 },
+  }
+
+  return localities[xid] = {
+    id: xid,
+    mass,
+    observation,
+    life: ['1'],
   }
 }
 
 function step() {
   time += 1
 
-  Object.values(localities).forEach(l => {
-    advance(time, l)
-  })
+  for (const id in localities) {
+    reflect(time, localities[id])
+    share(time, localities[id])
+  }
+
+  moveInSpace(time)
 }
 
-function advance(time, l) {
-  reflect(time, l)
-  collide(time, l)
-}
+// function advance(time, l) {
+//   reflect(time, l)
+//   collide(time, l)
+// }
 
 function reflect(time, l) {
-  l.self.forEach(self => {
-    self.life.push(language[time % (language.length - 1)])
-  })
+  l.life.push(language[time % (language.length - 1)])
 }
 
-function collide(time, l) {
-  Object.values(localities).forEach(l1 => {
-    liveTogether(time, l, l1)
-    liveInSpace(time, l, l1)
-  })
+function share(time, l) {
+  for (const id in localities) {
+    const l1 = localities[id]
+
+    if (l.id !== l1.id) {
+      exchange(l, l1)
+    }
+  }
 }
 
-function liveTogether(time, l, l1) {
-  l.self.forEach(self => {
-    l1.self.forEach(self1 => {
-      if (self.with === self1.with) {
-        exchange(self, self1)
-      }
-    })
-  })
+function moveInSpace(time, sl) {
+  // for (const id in ) {
+  //   liveTogether(time, l, localities[id])
+  // }
+  // Object.values(localities).forEach(l1 => {
+  //   liveInSpace(time, l, l1)
+  // })
 }
 
-function exchange(self, self1) {
-  const e = thoughMatrixes.find(([t, t1]) => t === self.life[self.life.length - 1] && t1 === self1.life[self1.life.length - 1])
+// function liveTogether(time, l, l1) {
+//   if (l.id !== l1.id) {
+//     exchange(l, l1)
+//   }
+// }
+
+function exchange(l, l1) {
+  const e = thoughMatrixes.find(([t, t1]) => t === l.life[l.life.length - 1] && t1 === l1.life[l1.life.length - 1])
 
   if (!e) {
     return 0
   }
 
-  return e[2](self, self1)
+  return e[2](l, l1)
 }
 
 function liveInSpace(time, l, l1) {
@@ -123,19 +142,26 @@ function liveInSpace(time, l, l1) {
 }
 
 function createTimeline(l, l1) {
-  const l0 = l.self[0].mass >= l1.self[0].mass ? l : l1
+  const l0 = l.mass >= l1.mass ? l : l1
   const l01 = l0 === l1 ? l : l1
 
-  const massGain = l01.self[0].mass / (l0.self[0].mass + l01.self[0].mass)
-  // const observation = Math.max(l.self[0].observation, l1.self[0].observation)
+  const massGain = l01.mass / (l0.mass + l01.mass)
+  // const observation = Math.max(l.observation, l1.observation)
 
-  l0.self.push({ life: ['1'], with: l01.id, mass: l1.self[0].mass + massGain, observation: l0.self[0].observation })
-  l01.self.push({ life: ['1'], with: l0.id, mass: l01.self[0].mass - massGain, observation: l01.self[0].observation })
+  const id = l.id + 'u' + l1.id
 
-  const timeline = { life: ['1'], with: l0.id + 'u' + l01.id, pos: { ...averagePos(l0.time[0].pos, l01.time[0].pos), dx: 0, dy: 0, ddx: 0, ddy: 0 } }
+  return createLocality({
+    id,
+    mass: l0.mass + l01.mass,
+    observation: Math.max(l.observation, l1.observation),
+  })
+  // l0.self.push({ life: ['1'], with: l01.id, mass: l1.mass + massGain, observation: l0.observation })
+  // l01.self.push({ life: ['1'], with: l0.id, mass: l01.mass - massGain, observation: l01.observation })
 
-  l.time.push(timeline)
-  l1.time.push(timeline)
+  // const timeline = { life: ['1'], with: l0.id + 'u' + l01.id, pos: { ...averagePos(l0.time[0].pos, l01.time[0].pos), dx: 0, dy: 0, ddx: 0, ddy: 0 } }
+
+  // l.time.push(timeline)
+  // l1.time.push(timeline)
 }
 
 const locality1 = createLocality({ mass: 1, observation: 1 })
@@ -144,5 +170,5 @@ const locality2 = createLocality({ mass: 1, observation: 1 })
 createTimeline(locality1, locality2)
 step()
 
-console.log('locality1', JSON.stringify(locality1, null, 2))
-console.log('locality2', JSON.stringify(locality2, null, 2))
+console.log('locality1', JSON.stringify(localities, null, 2))
+console.log('locality2', JSON.stringify(spaceLocalities, null, 2))
