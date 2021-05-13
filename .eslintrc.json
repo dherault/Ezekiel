@@ -1,0 +1,6 @@
+{
+  "extends": "dherault",
+  "rules": {
+    "guard-for-in": "off"
+  }
+}

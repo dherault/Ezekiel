@@ -1,0 +1,273 @@
+html {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+body {
+  position: relative;
+  height: 100vh;
+  overflow: auto;
+}
+
+#root {
+  position: relative;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+pre {
+  display: inline-block;
+  margin: 0;
+  padding: 4px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  background-color: #eeeeee;
+}
+
+ul,
+ol {
+  margin: 0;
+}
+
+/* ---
+  Elevation
+--- */
+
+.elevation-1 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.elevation-2 {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.elevation-3 {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.elevation-4 {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+/* ---
+  Position
+--- */
+
+.position-relative {
+  position: relative !important;
+}
+
+.position-absolute {
+  position: absolute !important;
+}
+
+.top-0 {
+  top: 0;
+}
+
+.bottom-0 {
+  bottom: 0;
+}
+
+.left-0 {
+  left: 0;
+}
+
+.right-0 {
+  right: 0;
+}
+
+/* ---
+  Dimensions
+--- */
+
+.w100 {
+  width: 100%;
+}
+
+.maxw100 {
+  max-width: 100%;
+}
+
+.h100 {
+  height: 100%;
+}
+
+.maxh100 {
+  max-height: 100%;
+}
+
+.minh100vh {
+  min-height: 100vh;
+}
+
+.w100vw {
+  width: 100vw;
+}
+
+.h100vh {
+  height: 100vh;
+}
+
+.w33 {
+  width: 33.333%;
+}
+
+/* ---
+  Typography
+--- */
+
+.silent-link {
+  text-decoration: none;
+}
+
+.no-select {
+  user-select: none;
+}
+
+.font-size-18 {
+  font-size: 18px !important;
+}
+
+.font-size-20 {
+  font-size: 20px !important;
+}
+
+.font-size-22 {
+  font-size: 22px !important;
+}
+
+.font-size-24 {
+  font-size: 24px !important;
+}
+
+.font-weight-500 {
+  font-weight: 500 !important;
+}
+
+.font-weight-600 {
+  font-weight: 600 !important;
+}
+
+.font-weight-700 {
+  font-weight: 700 !important;
+}
+
+.italic {
+  font-style: italic !important;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+/* ---
+  Display
+--- */
+
+.display-block {
+  display: block !important;
+}
+
+.display-inline {
+  display: inline;
+}
+
+.display-inline-block {
+  display: inline-block;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+/* ---
+  Palette
+--- */
+
+.color-white {
+  color: white !important;
+}
+
+.background-color-white {
+  background-color: white !important;
+}
+
+.fill-white {
+  fill: white !important;
+}
+
+/* ---
+  Transitions
+--- */
+
+.transition-opacity {
+  will-change: opacity;
+  transition: opacity 666ms ease;
+}
+
+/* ---
+  Misc
+--- */
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-move {
+  cursor: move;
+}
+
+.profile-image-16 {
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+}
+
+.profile-image-24 {
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+}
+
+.profile-image-32 {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+}
+
+.profile-image-48 {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+}
+
+.profile-image-64 {
+  width: 64px;
+  height: 64px;
+  border-radius: 32px;
+}
+
+.object-fit-cover {
+  object-fit: cover;
+}
