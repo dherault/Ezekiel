@@ -106,7 +106,7 @@ function liveInSpace(time, l, l1) {
 }
 
 function createTimeline(l, l1) {
-  const l0 = l.self[0].mass > l1.self[0].mass ? l : l1
+  const l0 = l.self[0].mass >= l1.self[0].mass ? l : l1
   const l01 = l0 === l1 ? l : l1
 
   const massGain = l01.self[0].mass / (l0.self[0].mass + l01.self[0].mass)
