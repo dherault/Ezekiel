@@ -1,6 +1,6 @@
 {
   "name": "localities",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A localization system for the living",
   "main": "index.js",
   "scripts": {

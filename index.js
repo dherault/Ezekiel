@@ -15,10 +15,10 @@ const selfLove = '❤️'
 const twoLove = ['❤️', '❤️']
 
 function love(self, self1) {
-  self.life += selfLove
+  self.life.push(selfLove)
 
   if (self !== self1) {
-    self1.life += selfLove
+    self1.life.push(selfLove)
   }
 
   return 1
@@ -40,14 +40,21 @@ function normPos(pos) {
   return Math.sqrt(pos.x ** 2 + pos.y ** 2)
 }
 
+function averagePos(pos, pos1) {
+  return {
+    x: (pos.x + pos1.x) / 2,
+    y: (pos.y + pos1.y) / 2,
+  }
+}
+
 // Life is a gift
 function createLocality({ mass, observation }) {
   const id = Math.random()
 
   return localities[id] = {
     id,
-    self: [{ life: '1', with: id, mass, observation }],
-    time: [{ life: '1', with: id, pos: { x: Math.random(), y: 0, dx: 0, dy: 0, ddx: 0, ddy: 0 } }],
+    self: [{ life: ['1'], with: id, mass, observation }],
+    time: [{ life: ['1'], with: id, pos: { x: Math.random(), y: 0, dx: 0, dy: 0, ddx: 0, ddy: 0 } }],
   }
 }
 
@@ -66,7 +73,7 @@ function advance(time, l) {
 
 function reflect(time, l) {
   l.self.forEach(self => {
-    self.life + language[time % (language.length - 1)]
+    self.life.push(language[time % (language.length - 1)])
   })
 }
 
@@ -85,6 +92,16 @@ function liveTogether(time, l, l1) {
       }
     })
   })
+}
+
+function exchange(self, self1) {
+  const e = thoughMatrixes.find(([t, t1]) => t === self.life[self.life.length - 1] && t1 === self1.life[self1.life.length - 1])
+
+  if (!e) {
+    return 0
+  }
+
+  return e[2](self, self1)
 }
 
 function liveInSpace(time, l, l1) {
@@ -112,18 +129,13 @@ function createTimeline(l, l1) {
   const massGain = l01.self[0].mass / (l0.self[0].mass + l01.self[0].mass)
   // const observation = Math.max(l.self[0].observation, l1.self[0].observation)
 
-  l0.self.push({ life: '1', with: l01.id, mass: l1.self[0].mass + massGain, observation: l0.self[0].observation })
-  l01.self.push({ life: '1', with: l0.id, mass: l01.self[0].mass - massGain, observation: l01.self[0].observation })
-}
+  l0.self.push({ life: ['1'], with: l01.id, mass: l1.self[0].mass + massGain, observation: l0.self[0].observation })
+  l01.self.push({ life: ['1'], with: l0.id, mass: l01.self[0].mass - massGain, observation: l01.self[0].observation })
 
-function exchange(self, self1) {
-  const e = thoughMatrixes.find(([t, t1]) => t === self.life[self.life.length - 1] && t1 === self1.life[self1.life.length - 1])
+  const timeline = { life: ['1'], with: l0.id + 'u' + l01.id, pos: { ...averagePos(l0.time[0].pos, l01.time[0].pos), dx: 0, dy: 0, ddx: 0, ddy: 0 } }
 
-  if (!e) {
-    return 0
-  }
-
-  return e[2](self, self1)
+  l.time.push(timeline)
+  l1.time.push(timeline)
 }
 
 const locality1 = createLocality({ mass: 1, observation: 1 })
@@ -132,5 +144,5 @@ const locality2 = createLocality({ mass: 1, observation: 1 })
 createTimeline(locality1, locality2)
 step()
 
-console.log('locality1', locality1)
-console.log('locality2', locality2)
+console.log('locality1', JSON.stringify(locality1, null, 2))
+console.log('locality2', JSON.stringify(locality2, null, 2))
