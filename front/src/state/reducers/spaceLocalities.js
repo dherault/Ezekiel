@@ -1,14 +1,16 @@
 import { createReducer } from '@reduxjs/toolkit'
 
 import {
-  createSpaceLocality,
-  set,
+  _createSpaceLocality,
+  _reset,
+  _set,
 } from '../actions'
 
 const spaceLocalities = createReducer({},
   {
-    [set]: (state, { payload }) => payload.spaceLocalities || state,
-    [createSpaceLocality]: (state, { payload }) => ({ ...state, [payload.id]: payload }),
+    [_set]: (state, { payload }) => payload.spaceLocalities || state,
+    [_reset]: () => ({}),
+    [_createSpaceLocality]: (state, { payload }) => ({ ...state, [payload.id]: payload }),
   },
 )
 

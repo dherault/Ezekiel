@@ -1,10 +1,10 @@
 // God is all, all is God
 
-import { batch } from 'redux'
+import { batch } from 'react-redux'
 
 import store from '../state'
 
-let time = 1
+// let time = 1
 
 // const localities = {}
 // const spaceLocalities = {}
@@ -55,7 +55,9 @@ function averagePos(pos, pos1) {
 }
 
 // Life is a gift
-function createLocality({ id, mass, observation }) {
+export function createLocality({ id, parentId, mass, observation }) {
+  const state = store.getState()
+
   batch(() => {
     const xid = id || Math.random().toString()
 
@@ -63,34 +65,46 @@ function createLocality({ id, mass, observation }) {
       type: 'CREATE_LOCALITY',
       payload: {
         id: xid,
+        parentId,
         mass,
         observation,
+        birthTime: state.time,
         life: ['1'],
       },
     })
 
-    store.dispatch({
-      type: 'CREATE_SPACE_LOCALITY',
-      payload: {
-        id: xid,
-        life: ['1'],
-        pos: { x: Math.random(), y: 0, dx: 0, dy: 0, ddx: 0, ddy: 0 },
-      },
-    })
+    // store.dispatch({
+    //   type: 'CREATE_SPACE_LOCALITY',
+    //   payload: {
+    //     id: xid,
+    //     life: ['1'],
+    //     pos: { x: Math.random(), y: 0, dx: 0, dy: 0, ddx: 0, ddy: 0 },
+    //   },
+    // })
+  })
+}
+
+export function updateLocality(payload) {
+  store.dispatch({
+    type: 'UPDATE_LOCALITY',
+    payload,
   })
 }
 
 export function step() {
-  time += 1
+  store.dispatch({ type: 'STEP' })
 
   const state = store.getState()
 
   for (const id in state.localities) {
-    reflect(time, state, state.localities[id])
-    share(time, state, state.localities[id])
+    console.log('Psyche process for', id)
+    reflect(state, state.localities[id])
+    share(state, state.localities[id])
   }
 
-  moveInSpace(time, state)
+  moveInSpace(state)
+
+  return state.time
 }
 
 // function advance(time, l) {
@@ -98,21 +112,36 @@ export function step() {
 //   collide(time, l)
 // }
 
-function reflect(time, state, l) {
-  l.life.push(language[time % (language.length - 1)])
+function reflect(state, l) {
+  updateLocality({
+    id: l.id,
+    life: [...l.life, language[state.time % (language.length - 1)]],
+  })
 }
 
-function share(time, state, l) {
+function share(state, l) {
   for (const id in state.localities) {
     const l1 = state.localities[id]
 
     if (l.id !== l1.id) {
-      exchange(l, l1)
+      const [t, t1] = exchange(l, l1)
+
+      batch(() => {
+        updateLocality({
+          id: l.id,
+          life: [...l.life, t],
+        })
+
+        updateLocality({
+          id: l1.id,
+          life: [...l1.life, t1],
+        })
+      })
     }
   }
 }
 
-function moveInSpace(time, sl) {
+function moveInSpace(state) {
   // for (const id in ) {
   //   liveTogether(time, l, localities[id])
   // }
@@ -137,7 +166,7 @@ function exchange(l, l1) {
   return e[2](l, l1)
 }
 
-function liveInSpace(time, l, l1) {
+function liveInSpace(l, l1) {
   const radius = l.observation
   const radius1 = l1.observation
 
