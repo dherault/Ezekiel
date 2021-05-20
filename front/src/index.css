@@ -1,3 +1,7 @@
+* {
+  overscroll-behavior-x: none;
+}
+
 html {
   min-height: 100vh;
   overflow: hidden;
@@ -236,38 +240,4 @@ ol {
 
 .cursor-move {
   cursor: move;
-}
-
-.profile-image-16 {
-  width: 16px;
-  height: 16px;
-  border-radius: 8px;
-}
-
-.profile-image-24 {
-  width: 24px;
-  height: 24px;
-  border-radius: 12px;
-}
-
-.profile-image-32 {
-  width: 32px;
-  height: 32px;
-  border-radius: 16px;
-}
-
-.profile-image-48 {
-  width: 48px;
-  height: 48px;
-  border-radius: 24px;
-}
-
-.profile-image-64 {
-  width: 64px;
-  height: 64px;
-  border-radius: 32px;
-}
-
-.object-fit-cover {
-  object-fit: cover;
 }

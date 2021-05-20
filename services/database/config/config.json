@@ -1,0 +1,37 @@
+{
+  "development": {
+    "username": "root",
+    "password": "root",
+    "database": "ezekiel",
+    "host": "localhost",
+    "dialect": "mysql",
+    "logging": false
+  },
+  "test": {
+    "username": "root",
+    "password": "root",
+    "database": "ezekiel",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "logging": false
+  },
+  "production_proxy": {
+    "username": "root",
+    "password": "1d52beb2-b8e6-48f0-ad68-7c09d6f45bf9",
+    "database": "ezekiel",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "logging": false
+  },
+  "production": {
+    "username": "root",
+    "password": "1d52beb2-b8e6-48f0-ad68-7c09d6f45bf9",
+    "database": "ezekiel",
+    "host": "/cloudsql/ezekiel-love:europe-north1:ezekiel-production-database",
+    "dialect": "mysql",
+    "dialectOptions": {
+      "socketPath": "/cloudsql/ezekiel-love:europe-north1:ezekiel-production-database"
+    },
+    "logging": false
+  }
+}

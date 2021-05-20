@@ -1,17 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit'
 
 import {
-  _reset,
-  _set,
-  _step,
+  _setTime,
 } from '../actions'
 
-const localities = createReducer(1,
+const time = createReducer(1,
   {
-    [_set]: (state, { payload }) => payload.localities || state,
-    [_reset]: () => ({}),
-    [_step]: state => state + 1,
+    [_setTime]: (state, { payload }) => payload,
   },
 )
 
-export default localities
+export default time

@@ -1,0 +1,37 @@
+{
+  "name": "database",
+  "private": true,
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "dev": "npm run db:proxy",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint file-storage migrations models scripts seeders",
+    "lint:fix": "npm run lint -- --fix",
+    "db:proxy:mac:production": "GOOGLE_APPLICATION_CREDENTIALS=\"./key-production.json\" ./cloud_sql_proxy_mac -instances=ezekiel-love:europe-north1:ezekiel-production-database=tcp:3306",
+    "db:proxy:linux:production": "GOOGLE_APPLICATION_CREDENTIALS=\"./key-production.json\" ./cloud_sql_proxy_linux -instances=ezekiel-love:europe-north1:ezekiel-production-database=tcp:3306",
+    "db:migrate:local": "NODE_ENV=development sequelize-cli db:migrate",
+    "db:migrate:production": "NODE_ENV=production_proxy sequelize-cli db:migrate",
+    "db:seed:local": "NODE_ENV=development sequelize-cli db:seed:all",
+    "db:seed:production": "NODE_ENV=production_proxy sequelize-cli db:seed:all",
+    "db:drop:local": "NODE_ENV=development node scripts/dropDatabase.js",
+    "db:create:local": "NODE_ENV=development node scripts/createDatabase.js",
+    "db:reset:local": "npm run db:drop:local && npm run db:create:local && npm run db:migrate:local && npm run db:seed:local",
+    "build": "docker build -t ezekiel-database-service .",
+    "tag:production": "docker tag ezekiel-database-service eu.gcr.io/ezekiel-production/ezekiel-database-service:latest",
+    "push:production": "docker push eu.gcr.io/ezekiel-production/ezekiel-database-service:latest",
+    "ship:production": "npm run build && npm run tag:production && npm run push:production"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^5.8.5",
+    "graphql-redis-subscriptions": "^2.3.1",
+    "ioredis": "^4.27.2",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.6.2"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0"
+  }
+}
