@@ -34,6 +34,7 @@
     "no-console": "off",
     "no-constant-condition": "off",
     "no-continue": "off",
+    "no-extra-parens": ["error", "all"],
     "no-loop-func": "off",
     "no-mixed-operators": "off",
     "no-multi-assign": "off",

@@ -1,4 +1,4 @@
-import theme from '../theme'
+import theme from '../../theme'
 
 function run5D(canvas, bodies) {
   const _ = canvas.getContext('2d')
