@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 
 import run5D from './run5D'
+import run4D from './run4D'
 
 function Space() {
   const [in5D, setIn5D] = useState(true)
@@ -17,7 +18,7 @@ function Space() {
   }
 
   function render4D() {
-    return null
+    return <FourthDimension bodies={bodies} />
   }
 
   return (
@@ -67,6 +68,35 @@ function FithDimension({ bodies }) {
       </Box>
       <canvas
         ref={canvasRef}
+        className="w100vw w100vh"
+      />
+    </>
+  )
+}
+
+function FourthDimension({ bodies }) {
+  const divRef = useRef()
+
+  useEffect(() => {
+    if (!divRef.current) return
+
+    run4D(divRef.current, bodies)
+  }, [bodies])
+
+  return (
+    <>
+      <Box
+        p={2}
+        position="absolute"
+        bottom={0}
+        left={0}
+      >
+        <pre>
+          {JSON.stringify(bodies, null, 2)}
+        </pre>
+      </Box>
+      <div
+        ref={divRef}
         className="w100vw w100vh"
       />
     </>

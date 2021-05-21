@@ -1,9 +1,9 @@
-const physica = require('../src/physics/index')
+const physica = require('../src/physics')
 
 async function main() {
   while (true) {
     console.log('___')
-    await physica(100)
+    await physica(10)
     await new Promise(resolve => setTimeout(resolve, 1000))
   }
 }
