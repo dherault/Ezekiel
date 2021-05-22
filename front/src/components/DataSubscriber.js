@@ -2,6 +2,12 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSubscription } from 'urql'
 
+const DebugSubscription = `
+  subscription DebugSubscription {
+    debug
+  }
+`
+
 const TimeSubscription = `
   subscription TimeSubscription {
     time
@@ -12,7 +18,6 @@ const BodySubscription = `
   subscription BodySubscription {
     body {
       id
-      parentId
       mass
       radius
       a
@@ -24,13 +29,19 @@ const BodySubscription = `
   }
 `
 
-const handleTimeSubscription = (messages = [], response) => response ? response.time : null
-const handleBodySubscription = (messages = [], response) => response ? response.body : null
+const createSubscriptionHanlder = key => (messages, response) => response ? response[key] : null
 
 function DataSubscriber() {
-  const [timeSubscriptionResults] = useSubscription({ query: TimeSubscription }, handleTimeSubscription)
-  const [physicalLocalitiesSubscriptionResults] = useSubscription({ query: BodySubscription }, handleBodySubscription)
+  const [debugSubscriptionResults] = useSubscription({ query: DebugSubscription }, createSubscriptionHanlder('debug'))
+  const [timeSubscriptionResults] = useSubscription({ query: TimeSubscription }, createSubscriptionHanlder('time'))
+  const [physicalLocalitiesSubscriptionResults] = useSubscription({ query: BodySubscription }, createSubscriptionHanlder('body'))
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (debugSubscriptionResults.data) {
+      console.log(debugSubscriptionResults.data)
+    }
+  }, [debugSubscriptionResults.data])
 
   useEffect(() => {
     if (timeSubscriptionResults.data) {

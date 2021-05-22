@@ -47,6 +47,8 @@ function Space() {
         position="absolute"
         bottom={0}
         left={0}
+        maxHeight="50vh"
+        overflow="auto"
       >
         <pre>
           {JSON.stringify(bodies, null, 2)}
@@ -85,23 +87,22 @@ function FithDimension({ bodies }) {
 
 function FourthDimension({ bodies }) {
   const divRef = useRef()
-  const [updateState, setUpdateState] = useState(() => null)
+  const [updateState, setUpdateState] = useState(() => () => null)
 
   useEffect(() => {
     if (!divRef.current) return
 
-    run4D(divRef.current)
+    const { start, stop, updateState } = run4D(divRef.current)
+
+    setUpdateState(() => updateState)
+    start()
+
+    return stop
   }, [])
-  // useEffect(() => {
-  //   if (!divRef.current) return
 
-  //   const { start, stop, updateState } = run4D(divRef.current)
-
-  //   setUpdateState(() => updateState)
-  //   start()
-
-  //   return stop
-  // }, [])
+  useEffect(() => {
+    updateState(bodies)
+  }, [updateState, bodies])
 
   return (
     <div

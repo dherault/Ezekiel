@@ -23,14 +23,6 @@
             "args": []
           },
           {
-            "name": "parentId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "mass",
             "type": {
               "kind": "SCALAR",
@@ -216,6 +208,14 @@
           },
           {
             "name": "time",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "debug",
             "type": {
               "kind": "SCALAR",
               "name": "Any"

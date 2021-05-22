@@ -24,20 +24,17 @@ const emptyVector4 = {}
 keys4.forEach(key => emptyVector4[key] = 0)
 
 async function physica(deltaTime) {
-  const bodies = await db.Body.findAll()
+  const initialBodies = await db.Body.findAll()
+
+  const bodies = initialBodies.map(b => b.toJSON())
 
   const nextBodies = step(deltaTime, bodies)
 
-  console.log('nextBodies', nextBodies.map(b => [b.a, b.b, b.c, b.d, b.e].join(' ')))
-
-  handleCollisions(bodies, nextBodies)
-
-  console.log('nextBodies[0].db', nextBodies[0].id, nextBodies[0].db)
-  console.log('nextBodies[1].db', nextBodies[1].id, nextBodies[1].db)
+  console.log('nextBodies', bodies.map(b => [b.a, b.b, b.c, b.d, b.e].join(' ')))
 
   const promises = []
 
-  bodies.forEach((b, i) => {
+  initialBodies.forEach((b, i) => {
     promises.push(
       b.update(nextBodies[i]),
       pubsub.publish('UPDATE_BODY', { body: b.toJSON() }),
@@ -48,24 +45,26 @@ async function physica(deltaTime) {
 }
 
 function step(deltaTime, bodies) {
-  const results = []
+  const nextBodies = []
 
   bodies.forEach(b => {
-    results.push({
-      ...b.toJSON(),
-      ...stepPosition4(deltaTime, bodies, b),
+    nextBodies.push({
+      ...b,
+      ...stepPosition4(deltaTime, b, bodies),
+      ...stepPosition5(deltaTime, b, bodies),
     })
   })
 
-  return results
+  return handleCollisions(deltaTime, nextBodies)
 }
 
-function stepPosition4(deltaTime, bodies, b1) {
+function stepPosition4(deltaTime, b1, bodies) {
   const nextPl1 = {}
 
-  const sumForces = bodies.reduce((force, b2) => (
-    b1.id === b2.id ? force : addVectors4(force, gravitationalForce4(b1, b2))
-  ), { ...emptyVector4 })
+  const sumForces = bodies.reduce(
+    (force, b2) => b1.id === b2.id ? force : addVectors4(force, gravitationalForce4(b1, b2)),
+    { ...emptyVector4 }
+  )
 
   const acceleration = multiplyVector4ByScalar(sumForces, 1 / b1.mass)
 
@@ -84,6 +83,10 @@ function gravitationalForce4(b1, b2) {
   return multiplyVector4ByScalar(normalizeVector4(substractVectors4(b2, b1)), norm)
 }
 
+function stepPosition5() {
+  return {}
+}
+
 // function computeMassBarycenter(bodies) {
 //   let barycenter = { ...emptyVector4 }
 
@@ -98,9 +101,9 @@ function gravitationalForce4(b1, b2) {
 //   return barycenter
 // }
 
-function isLockedIn5d(b1, b2) {
-  return b2.e - b1.e < Math.max(b1.radius, b2.radius)
-}
+// function isLockedIn5d(b1, b2) {
+//   return b2.e - b1.e < Math.max(b1.radius, b2.radius)
+// }
 
 /* ---
   Algebra

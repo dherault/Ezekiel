@@ -45,6 +45,9 @@ const resolvers = {
     },
   },
   Subscription: {
+    debug: {
+      subscribe: () => pubsub.asyncIterator(['DEBUG']),
+    },
     time: {
       subscribe: () => pubsub.asyncIterator(['UPDATE_TIME']),
     },

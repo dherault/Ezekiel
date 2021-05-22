@@ -5,49 +5,87 @@ import CameraControls from 'camera-controls'
 
 CameraControls.install({ THREE })
 
-function run4D(element, bodies) {
+function run4D(element) {
   let running = true
+  let meshes = []
+
   const width = window.innerWidth
   const height = window.innerHeight
 
   const clock = new THREE.Clock()
   const scene = new THREE.Scene()
-  const camera = new THREE.PerspectiveCamera(60, width / height, 0.01, 1000)
+  const camera = new THREE.PerspectiveCamera(60, width / height, 0.01, 10000)
 
-  camera.position.set(0, 0, 5)
+  camera.position.set(0, 0, 128)
 
   const renderer = new THREE.WebGLRenderer()
 
   renderer.setSize(width, height)
+  element.innerHTML = ''
   element.appendChild(renderer.domElement)
 
   const cameraControls = new CameraControls(camera, renderer.domElement)
 
   const mesh = new THREE.Mesh(
     new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true })
+    new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
   )
 
   mesh.position.y = 0.5
   scene.add(mesh)
 
-  const gridHelper = new THREE.GridHelper(100, 100)
+  const gridHelper = new THREE.GridHelper(1000, 18, '#444', '#444')
   // gridHelper.position.y = -1
   scene.add(gridHelper)
 
   function animate() {
-
     const delta = clock.getDelta()
-    // const elapsed = clock.getElapsedTime()
+
     cameraControls.update(delta)
     renderer.render(scene, camera)
 
     if (running) requestAnimationFrame(animate)
   }
 
-  animate()
+  function start() {
+    running = true
 
-  return () => running = false
+    animate()
+  }
+
+  function stop() {
+    running = false
+  }
+
+  function updateState(nextBodies) {
+    meshes.forEach(mesh => {
+      mesh.geometry.dispose()
+      mesh.material.dispose()
+      scene.remove(mesh)
+    })
+
+    meshes = []
+
+    nextBodies.forEach(body => {
+      const sphere = new THREE.Mesh(
+        new THREE.SphereGeometry(body.radius, 32, 32),
+        new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true })
+      )
+
+      sphere.position.z = body.a
+      sphere.position.x = body.b
+      sphere.position.y = body.c
+
+      scene.add(sphere)
+      meshes.push(sphere)
+    })
+  }
+
+  return {
+    start,
+    stop,
+    updateState,
+  }
 }
 
 function nmToHex(wavelength) {

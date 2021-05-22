@@ -3,8 +3,12 @@ const sphereCollisionDelta = 0
 const keys4 = ['a', 'b', 'c', 'd']
 
 const emptyVector4 = {}
+const emptyDerivatedVector4 = {}
 
-keys4.forEach(key => emptyVector4[key] = 0)
+keys4.forEach(key => {
+  emptyVector4[key] = 0
+  emptyDerivatedVector4[`d${key}`] = 0
+})
 
 function cantor(x, y) {
   return 0.5 * (x + y) * (x + y + 1) + Math.min(x, y)
@@ -24,6 +28,10 @@ function inverseCantor(z) {
 function areSphereCollinding(b1, b2) {
   return distance4(b1, b2) < b1.radius + b2.radius + sphereCollisionDelta
 }
+
+/* ---
+  Algebra
+--- */
 
 function distanceSquare4(v1, v2) {
   let distanceSquare = 0
@@ -77,6 +85,18 @@ function normalizeVector4(v) {
   return multiplyVector4ByScalar(v, norm === 0 ? 1 : 1 / norm)
 }
 
+function dotProduct4(v1, v2) {
+  let dotProduct = 0
+
+  keys4.forEach(key => dotProduct += v1[key] * v2[key])
+
+  return dotProduct
+}
+
+/* ---
+  Calculus
+--- */
+
 function extractPositionDerivativeVector(b, x) {
   let prefix = ''
 
@@ -89,17 +109,10 @@ function extractPositionDerivativeVector(b, x) {
   return vector
 }
 
-function dotProduct4(v1, v2) {
-  let dotProduct = 0
-
-  keys4.forEach(key => dotProduct += v1[key] * v2[key])
-
-  return dotProduct
-}
-
 module.exports = {
   keys4,
   emptyVector4,
+  emptyDerivatedVector4,
   cantor,
   inverseCantor,
   areSphereCollinding,

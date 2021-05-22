@@ -5,14 +5,13 @@ function run5D(canvas, bodies) {
 
   const devicePixelRatio = window.devicePixelRatio || 1
 
-  const canvasPixelRatio = (
+  const canvasPixelRatio = 
     _.webkitBackingStorePixelRatio
     || _.mozBackingStorePixelRatio
     || _.msBackingStorePixelRatio
     || _.oBackingStorePixelRatio
     || _.backingStorePixelRatio
     || 1
-  )
 
   const dpr = devicePixelRatio / canvasPixelRatio
 

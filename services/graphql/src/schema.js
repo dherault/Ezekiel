@@ -3,7 +3,6 @@ const { gql } = require('apollo-server')
 module.exports = gql`
 type Body {
   id: ID
-  parentId: ID
   mass: Float
   radius: Float
   a: Float
@@ -34,5 +33,6 @@ type Mutation {
 type Subscription {
   body: Body
   time: String
+  debug: String
 }
 `
