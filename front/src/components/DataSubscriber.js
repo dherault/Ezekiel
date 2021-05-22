@@ -16,7 +16,7 @@ const TimeSubscription = `
 
 const BodySubscription = `
   subscription BodySubscription {
-    body {
+    bodies {
       id
       mass
       radius
@@ -34,7 +34,7 @@ const createSubscriptionHanlder = key => (messages, response) => response ? resp
 function DataSubscriber() {
   const [debugSubscriptionResults] = useSubscription({ query: DebugSubscription }, createSubscriptionHanlder('debug'))
   const [timeSubscriptionResults] = useSubscription({ query: TimeSubscription }, createSubscriptionHanlder('time'))
-  const [physicalLocalitiesSubscriptionResults] = useSubscription({ query: BodySubscription }, createSubscriptionHanlder('body'))
+  const [physicalLocalitiesSubscriptionResults] = useSubscription({ query: BodySubscription }, createSubscriptionHanlder('bodies'))
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -54,8 +54,10 @@ function DataSubscriber() {
 
   useEffect(() => {
     if (physicalLocalitiesSubscriptionResults.data) {
+      console.log('UPDATE_BODIES')
+
       dispatch({
-        type: 'UPDATE_BODY',
+        type: 'UPDATE_BODIES',
         payload: physicalLocalitiesSubscriptionResults.data,
       })
     }

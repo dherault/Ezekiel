@@ -3,11 +3,13 @@ import CameraControls from 'camera-controls'
 
 // import theme from '../../theme'
 
+import store from '../../state'
+
 CameraControls.install({ THREE })
 
 function run4D(element) {
   let running = true
-  let meshes = []
+  const normalizedMeshes = {}
 
   const width = window.innerWidth
   const height = window.innerHeight
@@ -35,11 +37,12 @@ function run4D(element) {
   scene.add(mesh)
 
   const gridHelper = new THREE.GridHelper(1000, 18, '#444', '#444')
-  // gridHelper.position.y = -1
   scene.add(gridHelper)
 
   function animate() {
     const delta = clock.getDelta()
+
+    Object.values(store.getState().bodies).forEach(updateBody)
 
     cameraControls.update(delta)
     renderer.render(scene, camera)
@@ -57,28 +60,23 @@ function run4D(element) {
     running = false
   }
 
-  function updateState(nextBodies) {
-    meshes.forEach(mesh => {
-      mesh.geometry.dispose()
-      mesh.material.dispose()
-      scene.remove(mesh)
-    })
-
-    meshes = []
-
-    nextBodies.forEach(body => {
+  function updateBody(body) {
+    if (!normalizedMeshes[body.id]) {
       const sphere = new THREE.Mesh(
         new THREE.SphereGeometry(body.radius, 32, 32),
-        new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true })
+        new THREE.MeshBasicMaterial({ color: 0xff0000 })
       )
 
-      sphere.position.z = body.a
-      sphere.position.x = body.b
-      sphere.position.y = body.c
-
+      normalizedMeshes[body.id] = sphere
       scene.add(sphere)
-      meshes.push(sphere)
-    })
+    }
+
+    normalizedMeshes[body.id].position.x = body.b
+    normalizedMeshes[body.id].position.y = body.c
+    normalizedMeshes[body.id].position.z = body.a
+  }
+
+  function updateState(nextBodies) {
   }
 
   return {

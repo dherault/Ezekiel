@@ -58,7 +58,7 @@ function Space() {
         <FithDimension bodies={bodies} />
       </Route>
       <Route path="/space/4D">
-        <FourthDimension bodies={bodies} />
+        <FourthDimension />
       </Route>
       <Redirect
         from="/space"
@@ -85,24 +85,18 @@ function FithDimension({ bodies }) {
   )
 }
 
-function FourthDimension({ bodies }) {
+function FourthDimension() {
   const divRef = useRef()
-  const [updateState, setUpdateState] = useState(() => () => null)
 
   useEffect(() => {
     if (!divRef.current) return
 
-    const { start, stop, updateState } = run4D(divRef.current)
+    const { start, stop } = run4D(divRef.current)
 
-    setUpdateState(() => updateState)
     start()
 
     return stop
   }, [])
-
-  useEffect(() => {
-    updateState(bodies)
-  }, [updateState, bodies])
 
   return (
     <div

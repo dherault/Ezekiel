@@ -26,6 +26,7 @@
       2,
       { "MemberExpression": "off", "SwitchCase": 1, "ignoreComments": true }
     ],
+    "max-classes-per-file": "off",
     "max-len": "off",
     "no-alert": "off",
     "no-await-in-loop": "off",

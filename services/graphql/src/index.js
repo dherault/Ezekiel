@@ -51,8 +51,8 @@ const resolvers = {
     time: {
       subscribe: () => pubsub.asyncIterator(['UPDATE_TIME']),
     },
-    body: {
-      subscribe: () => pubsub.asyncIterator(['UPDATE_BODY']),
+    bodies: {
+      subscribe: () => pubsub.asyncIterator(['UPDATE_BODIES']),
     },
   },
 }

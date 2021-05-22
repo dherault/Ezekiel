@@ -56,6 +56,21 @@ function handleCollisions(deltaTime, bodies) {
     return collisions
   }, {})
 
+  /* ---
+  collisions = {
+    "0": [
+      1,
+      2
+    ],
+    "1": [
+      0
+    ],
+    "2": [
+      0
+    ]
+  }
+  --- */
+
   debug('collisions', JSON.stringify(collisions, null, 2))
 
   const normalizedBodies = {}
@@ -70,13 +85,16 @@ function handleCollisions(deltaTime, bodies) {
     normalizedBodies[b.id] = b
   })
 
-  return Object.values(normalizedBodies)
+  return normalizedBodies
 }
 
 function resolveCollision(i1, indexes, bodies) {
-  debug('___')
+  // debug('___')
 
+  // The final body, with updated speed
+  // Given an empty speed vector to add the collision speed vectors to
   const bodyCloneAlpha = { ...bodies[i1], ...emptyDerivatedVector4 }
+  // The initial body, not updated between collisions
   const bodyClone = { ...bodies[i1] }
 
   indexes.forEach(i2 => {
@@ -87,12 +105,13 @@ function resolveCollision(i1, indexes, bodies) {
     })
   })
 
-  debug('pre collision speed', JSON.stringify(extractPositionDerivativeVector(bodyClone, 1)))
-  debug('post collision speed', JSON.stringify(extractPositionDerivativeVector(bodyCloneAlpha, 1)))
+  // debug('pre collision speed', JSON.stringify(extractPositionDerivativeVector(bodyClone, 1)))
+  // debug('post collision speed', JSON.stringify(extractPositionDerivativeVector(bodyCloneAlpha, 1)))
 
   return bodyCloneAlpha
 }
 
+// See equations on top of the page
 function computePostCollisionSpeed(b1, b2) {
   const d = normalizeVector4(substractVectors4(b1, b2))
   const u1 = extractPositionDerivativeVector(b1, 1)
@@ -103,8 +122,8 @@ function computePostCollisionSpeed(b1, b2) {
   const v1 = addVectors4(u1, multiplyVector4ByScalar(d, -a / b1.mass))
   // const v2 = addVectors4(u2, multiplyVector4ByScalar(d, a / b2.mass))
 
-  debug('u1', b1.id, JSON.stringify(u1))
-  debug('v1', b1.id, JSON.stringify(v1))
+  // debug('u1', b1.id, JSON.stringify(u1))
+  // debug('v1', b1.id, JSON.stringify(v1))
 
   return v1
 }

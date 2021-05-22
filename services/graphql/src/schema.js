@@ -31,7 +31,7 @@ type Mutation {
 }
 
 type Subscription {
-  body: Body
+  bodies: [Body]
   time: String
   debug: String
 }

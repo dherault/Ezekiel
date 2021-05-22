@@ -28,18 +28,13 @@ async function physica(deltaTime) {
 
   const bodies = initialBodies.map(b => b.toJSON())
 
-  const nextBodies = step(deltaTime, bodies)
+  const normalizedBodies = step(deltaTime, bodies)
 
   console.log('nextBodies', bodies.map(b => [b.a, b.b, b.c, b.d, b.e].join(' ')))
 
-  const promises = []
+  const promises = initialBodies.map(b => b.update(normalizedBodies[b.id]))
 
-  initialBodies.forEach((b, i) => {
-    promises.push(
-      b.update(nextBodies[i]),
-      pubsub.publish('UPDATE_BODY', { body: b.toJSON() }),
-    )
-  })
+  promises.push(pubsub.publish('UPDATE_BODIES', { bodies: initialBodies.map(b => b.toJSON()) }))
 
   await Promise.all(promises)
 }
